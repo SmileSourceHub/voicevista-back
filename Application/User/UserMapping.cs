@@ -1,4 +1,5 @@
 ﻿namespace voicevista_back.Application.User
+
 {
     public static class UserMapping
     {

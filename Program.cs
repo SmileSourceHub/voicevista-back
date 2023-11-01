@@ -1,9 +1,12 @@
 using voicevista_back.Application.User;
+using voicevista_back.Infrastructure.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton<IUserRegisterService, UserRegisterService>();
+builder.Services.AddSingleton<IUserLoginService, UserLoginService>();
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
