@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using voicevista_back.Enpoints.Models;
+using voicevista_back.Services.Interfaces;
 
-namespace voicevista_back.Application.User
+namespace voicevista_back.Enpoints
 {
     [ApiController]
     [Route("[controller]")]
@@ -12,7 +14,7 @@ namespace voicevista_back.Application.User
         public UserController(IUserRegisterService userRegisterService, IUserLoginService userLoginService)
         {
             _userRegisterService = userRegisterService;
-            _userLoginService = userLoginService;   
+            _userLoginService = userLoginService;
         }
 
         [HttpPost]

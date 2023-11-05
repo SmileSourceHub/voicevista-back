@@ -1,5 +1,7 @@
-using voicevista_back.Application.User;
-using voicevista_back.Infrastructure.User;
+using voicevista_back.DataAccess.Database;
+using voicevista_back.DataAccess.Database.Interfaces;
+using voicevista_back.Services;
+using voicevista_back.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

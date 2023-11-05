@@ -1,6 +1,10 @@
-﻿using voicevista_back.Infrastructure.User;
+﻿using voicevista_back.DataAccess.Database.Interfaces;
+using voicevista_back.DataAccess.Database.Mappings;
+using voicevista_back.Enpoints.Models;
+using voicevista_back.Services.Interfaces;
+using voicevista_back.Services.Models;
 
-namespace voicevista_back.Application.User
+namespace voicevista_back.Services
 {
     public class UserRegisterService : IUserRegisterService
     {
@@ -12,12 +16,14 @@ namespace voicevista_back.Application.User
         }
         public bool UserRegister(CreateRequestUser createRequestUser)
         {
-            if (_userRepository.Find(createRequestUser))
+            var user = createRequestUser.ToDomain();
+
+            if (_userRepository.Find(user.Email))
             {
                 return false;
             }
 
-            _userRepository.Create(createRequestUser.ToDomain());
+            _userRepository.Create(user.ToDto());
             return true;
         }
     }

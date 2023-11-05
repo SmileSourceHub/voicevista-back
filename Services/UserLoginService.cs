@@ -1,6 +1,8 @@
-﻿using voicevista_back.Infrastructure.User;
+﻿using voicevista_back.DataAccess.Database.Interfaces;
+using voicevista_back.Enpoints.Models;
+using voicevista_back.Services.Interfaces;
 
-namespace voicevista_back.Application.User
+namespace voicevista_back.Services
 {
     public class UserLoginService : IUserLoginService
     {
@@ -12,7 +14,7 @@ namespace voicevista_back.Application.User
         }
         public bool UserLogin(LoginRequestUser loginRequestUser)
         {
-            if (_userRepository.FindUserAndPassword(loginRequestUser))
+            if (_userRepository.Challenge(loginRequestUser.Email, loginRequestUser.Password))
             {
                 return true;
             }
