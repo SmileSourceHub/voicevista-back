@@ -1,8 +1,7 @@
-﻿namespace voicevista_back.Domain
+﻿namespace voicevista_back.Enpoints.Models
 {
-    public class User
+    public class CreateRequestUser
     {
-        public int UserId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
