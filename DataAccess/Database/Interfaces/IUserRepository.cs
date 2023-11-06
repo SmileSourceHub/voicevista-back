@@ -6,10 +6,10 @@ namespace voicevista_back.DataAccess.Database.Interfaces
 {
     public interface IUserRepository
     {
-        bool Create(UserDto user);
+        Task Upsert(UserDto user);
 
-        bool Find(string email);
+        Task<User> Find(string email);
 
-        bool Challenge(string email, string password);
+        Task<bool> Challenge(string email, string password);
     }
 }

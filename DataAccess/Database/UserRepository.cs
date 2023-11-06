@@ -1,43 +1,67 @@
-﻿using voicevista_back.DataAccess.Database.Interfaces;
+﻿using Cassandra;
+using Cassandra.Mapping;
+using voicevista_back.DataAccess.Database.Interfaces;
+using voicevista_back.DataAccess.Database.Mappings;
 using voicevista_back.DataAccess.Database.Models;
 using voicevista_back.Enpoints.Models;
+using voicevista_back.Services.Models;
 
 namespace voicevista_back.DataAccess.Database
 {
     public class UserRepository : IUserRepository
     {
-        private static List<UserDto> _users = new();
+        private readonly Cassandra.ISession _client;
+        public readonly static string _tableName = "users";
+        private readonly string _keySpaceName;
 
-        public bool Create(UserDto user)
+        public UserRepository(IConfiguration configuration)
         {
-            if (user == null)
-            {
-                return false;
-            }
+            _keySpaceName = configuration["CassandraConfig:KeySpaceName"];
+            var cluster = Cluster.Builder()
+                     .AddContactPoints(configuration["CassandraConfig:HostName"])
+                     .Build();
 
-            _users.Add(user);
-
-            return true;
+            // Connect to the nodes using a keyspace
+            _client = cluster.Connect(_keySpaceName);
         }
 
-        public bool Find(string email)
+        public async Task Upsert(UserDto user)
         {
-            if (_users.Any(user => user.Email == email))
-            {
-                return true;
-            }
-
-            return false;
+            user.UserId = Guid.NewGuid();
+            var mapper = new Mapper(_client);
+            await mapper.UpdateAsync(user, );
         }
 
-        public bool Challenge(string email, string password)
+        public async Task<User> Find(string email)
         {
-            if (_users.Any(user => user.Email == email && user.Password == password))
+            var mapper = new Mapper(_client);
+            UserDto? user;
+            try
             {
-                return true;
+                user = await mapper.SingleOrDefaultAsync<UserDto>("WHERE Email = ?", email);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while fetching user", ex);
             }
 
-            return false;
+            return user?.ToDomain();
+        }
+
+        public async Task<bool> Challenge(string email, string password)
+        {
+            var mapper = new Mapper(_client);
+            UserDto user;
+            try
+            {
+                user = await mapper.SingleOrDefaultAsync<UserDto>("WHERE Email = ? AND Pwd = ?", email, password);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while challenging user", ex);
+            }
+
+            return user == null ? false : true;
         }
     }
 }

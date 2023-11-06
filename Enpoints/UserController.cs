@@ -8,28 +8,34 @@ namespace voicevista_back.Enpoints
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserRegisterService _userRegisterService;
-        private readonly IUserLoginService _userLoginService;
+        private readonly IUserService _userService;
 
-        public UserController(IUserRegisterService userRegisterService, IUserLoginService userLoginService)
+        public UserController(IUserService userService)
         {
-            _userRegisterService = userRegisterService;
-            _userLoginService = userLoginService;
+            _userService = userService;
         }
 
         [HttpPost]
         [Route("/register")]
         public async Task<IActionResult> Index([FromBody] CreateRequestUser createRequestUser)
         {
-            var userRegister = _userRegisterService.UserRegister(createRequestUser);
-            return Ok(userRegister);
+            await _userService.UserRegister(createRequestUser);
+            return Ok("Upsert done");
         }
 
         [HttpPost]
         [Route("/login")]
         public async Task<IActionResult> Index([FromBody] LoginRequestUser loginRequestUser)
         {
-            var userLogin = _userLoginService.UserLogin(loginRequestUser);
+            var userLogin = await _userService.UserLogin(loginRequestUser);
+            return Ok(userLogin);
+        }
+
+        [HttpPost]
+        [Route("/find")]
+        public async Task<IActionResult> Index([FromBody] string email)
+        {
+            var userLogin = await _userService.FindUser(email);
             return Ok(userLogin);
         }
     }

@@ -11,7 +11,7 @@ namespace voicevista_back.DataAccess.Database.Mappings
         {
             return new()
             {
-                UserId = Random.Shared.Next(),
+                UserId = Guid.Empty,
                 Username = createRequestUser.Username,
                 Password = createRequestUser.Password,
                 Email = createRequestUser.Email,
@@ -22,10 +22,21 @@ namespace voicevista_back.DataAccess.Database.Mappings
         {
             return new()
             {
-                UserId = Random.Shared.Next(),
+                UserId = user.UserId,
                 Username = user.Username,
-                Password = user.Password,
+                Pwd = user.Password,
                 Email = user.Email,
+            };
+        }
+
+        public static User ToDomain(this UserDto userDto)
+        {
+            return new()
+            {
+                UserId = userDto.UserId,
+                Username = userDto.Username,
+                Password = userDto.Pwd,
+                Email = userDto.Email,
             };
         }
     }
